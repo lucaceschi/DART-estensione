@@ -23,13 +23,3 @@ Tuttavia, per quanto operante su un insieme più ristretto di credenziali, la co
 # Esecuzione dei test
 
 TODO: istruzioni per l'esecuzione dei test python
-
-
-
-
-
-
-
-
-
- Volendo invece unicamente verificare l'assegnamento di un ruolo ad un membro, sarà sufficiente scoprire quel sottoinsieme di particolari credenziali della policy che 
