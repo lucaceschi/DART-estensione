@@ -4,7 +4,7 @@ from pprint import pprint
 
 # ----------------------------------------------------- 
 
-parser = argparse.ArgumentParser(description='Esegui il test web of trust con partecipazione passiva (test scenario B paper ICDCS).')
+parser = argparse.ArgumentParser(description='Esegui il test web of trust con partecipazione attiva (test scenario B paper ICDCS).')
 parser.add_argument('--build', type=str,
                         default='build/contracts/DART.json',
                         help="path all'artifact DART.json prodotto da Truffle a seguito della compilazione (default: build/contracts/DART.json)")
@@ -52,7 +52,7 @@ pprint(PR)
 
 # ... rolenames esadecimali a rolenames stringhe e viceversa
 RN = {
-    'trust': '0x100a',
+    'trust': '0x200a',
 }
 INV_RN = {v: k for k, v in RN.items()}
 print("\nROLENAMES:")
@@ -77,11 +77,12 @@ d.newRole(RN['trust'], {'from': accounts[0]})
 
 for i in range(1, nPartecipants):
 
-    print('\nAdding a new partecipant (passive) to the web of trust... ', end='')
+    print('\nAdding a new partecipant (active) to the web of trust... ', end='')
 
     d.newRole(RN['trust'], {'from': accounts[i]})
     d.addLinkedInclusion(RN['trust'], LIExpression(accounts[i], RN['trust'], RN['trust']), 80, {'from': accounts[i]})
     d.addSimpleMember(RN['trust'], SMExpression(accounts[i-1]), 100, {'from': accounts[i]})
+    d.addSimpleMember(RN['trust'], SMExpression(accounts[i]), 100, {'from': accounts[i-1]})
 
     print(f'Number of total partecipants: {i+1}')
 
