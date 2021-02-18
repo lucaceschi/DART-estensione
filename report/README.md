@@ -78,15 +78,32 @@ Una volta trovato tale sottoinsieme, esso potrebbe essere fornito ad una procedu
 
 dove il derived edge che collega il nodo *UniA.student* ad *EOrg.university.student* è detto *derived linked edge* [ref] in quanto generato dalla valutazione di una credenziale di inclusione linkata. Essi sono caratterizzati da un *support set* [ref], ovvero un percorso di nodi che ne giustifichi l'esistenza. In figura, la porzione di proof graph cerchiata corrisponde al support set per il derived link edge in questione.
 
+Ricapitolando, essendo interessati a verificare che ad il principal *A* risulti assegnato il ruolo *R*:
+
+1. viene eseguita off-chain una procedura di chain discovery mirata a verificare tale obiettivo, sfruttando le credenziali attualmente presenti su blockchain. Se l'esito è positivo, vorremo poter eseguire on-chain una procedura che garantisca auditability nel fatto che attualmente al principal *A* risulti assegnato il ruolo *R*
+2. sempre off-chain, il proof graph prodotto viene esaminato al fine di trovare quel sottoinsieme di credenziali la cui valutazione abbia permesso di verificare l'obiettivo
+3. il sottoinsieme di credenziali così trovato viene fornito ad una procedura di chain discovery on-chain, la quale durante i suoi calcoli si limiterà a valutare quelle sole credenziali
+4. tale procedura restituirà infine le soluzioni contenute nel nodo rappresentante il ruolo *R*, tra le quali sarà sicuramente presente il principal *A*
+
 ## Approccio finale
 
-Per quanto operante su un insieme ristretto di credenziali, la complessità della procedura di chain discovery on-chain si manterrebbe dello stesso ordine, in quanto sarebbe comunque prevista la costruzione di un proof graph. Da qui l'idea piuttosto di ricorrere a:
+Per quanto operante su un insieme ristretto di credenziali, la complessità della procedura di chain discovery on-chain si manterrebbe dello stesso ordine di complessità, in quanto sarebbe comunque prevista la costruzione di un proof graph. Da qui l'idea piuttosto di ricorrere a:
 
 * un algoritmo off-chain che includa:
   * l'esecuzione (locale) di un chain discovery esteso a tutte le credenziali attualmente presenti on-chain
   * la costruzione di una *dimostrazione* sulla base del sottoinsieme minimo utile di credenziali trovato
 * un algoritmo on-chain in grado di verificare tramite secure computing la dimostrazione prodotta off-chain
 
-È chiaro come tale idea assuma rilevanza solo dal momento in cui il processo di verifica on-chain presenti una complessità minore rispetto alla esecuzione on-chain di un algoritmo di credential chain discovery.
+È chiaro come tale idea assuma rilevanza solo dal momento in cui il processo di verifica on-chain presenti una complessità minore rispetto alla esecuzione on-chain di un algoritmo di credential chain discovery. A questo scopo, anziché eseguire on-chain una procedura di chain discovery ristretta ad un dato sottoinsieme minimo di credenziali, saremmo interessati a rielaborare tale sottoinsieme in una certa forma di "dimostrazione" facilmente ed inequivocabilmente verificabile on-chain.
 
-[...]
+Il metodo che abbiamo implementato e sperimentato prevede:
+
+* come dimostrazione: una particolare permutazione delle credenziali contenute nel sottoinsieme minimo prodotto off-chain
+* come verifica della dimostrazione: una procedura che processi sequenzialmente tali credenziali ordinate
+
+
+
+
+
+
+
