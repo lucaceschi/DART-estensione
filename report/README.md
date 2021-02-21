@@ -89,17 +89,40 @@ Ricapitolando, essendo interessati a verificare che ad il principal *A* risulti 
 
 Per quanto operante su un insieme ristretto di credenziali, la complessità della procedura di chain discovery on-chain si manterrebbe dello stesso ordine di complessità, in quanto sarebbe comunque prevista la costruzione di un proof graph. Da qui l'idea piuttosto di ricorrere a:
 
-* un algoritmo off-chain che includa:
-  * l'esecuzione (locale) di un chain discovery esteso a tutte le credenziali attualmente presenti on-chain
-  * la costruzione di una *dimostrazione* sulla base del sottoinsieme minimo utile di credenziali trovato
+* un algoritmo off-chain che preveda:
+  * anzitutto, l'esecuzione (locale) di un chain discovery esteso a tutte le credenziali attualmente presenti on-chain
+  * successivamente, la costruzione di una *dimostrazione* sulla base del sottoinsieme minimo utile di credenziali trovato
 * un algoritmo on-chain in grado di verificare tramite secure computing la dimostrazione prodotta off-chain
 
-È chiaro come tale idea assuma rilevanza solo dal momento in cui il processo di verifica on-chain presenti una complessità minore rispetto alla esecuzione on-chain di un algoritmo di credential chain discovery. A questo scopo, anziché eseguire on-chain una procedura di chain discovery ristretta ad un dato sottoinsieme minimo di credenziali, saremmo interessati a rielaborare tale sottoinsieme in una certa forma di "dimostrazione" facilmente ed inequivocabilmente verificabile on-chain.
+È chiaro come tale idea assuma rilevanza solo dal momento in cui il processo di verifica on-chain presenti una complessità minore rispetto alla esecuzione on-chain di un algoritmo di credential chain discovery. A questo scopo, saremmo interessati a rielaborare un dato sottoinsieme minimo di credenziali in una certa forma di "dimostrazione" facilmente ed inequivocabilmente verificabile on-chain.
 
 Il metodo che abbiamo implementato e sperimentato prevede:
 
-* come dimostrazione: una particolare permutazione delle credenziali contenute nel sottoinsieme minimo prodotto off-chain
+* come dimostrazione: una particolare permutazione delle credenziali contenute nel sottoinsieme minimo prodotto off-chain; tale dimostrazione viene costruita appositamente sulla base delle regole che definiscono la procedura di verifica
 * come verifica della dimostrazione: una procedura che processi sequenzialmente tali credenziali ordinate
+
+### Procedura di verifica
+
+La procedura di verifica è definita da 4 regole, ciascuna per ogni tipo di credenziale, e fa utilizzo di una stack di elaborazione, il cui stato viene letto e aggiornato da parte delle regole. La stack di elaborazione mantiene delle soluzioni (le stesse "soluzioni" mantenute dai nodi del proof graph!), vale a dire delle triple composte da *role*, *member* e *weight*, rappresentanti risultati intermedi di elaborazione della dimostrazione.
+
+La procedura ha inizio con stack di elaborazione vuota e procede a valutare ordinatamente le credenziali della dimostrazione; per ciascuna di esse:
+
+1. la credenziale deve risultare esistente 
+2. deve essere rispettata ed applicata la regola relativa alla credenziale
+
+Se anche una sola credenziale non risulta esistente o se una regola non è rispettata, la procedura fallisce. Se invece tutte le credenziali della dimostrazione sono state processate con successo passando tutte le regole, la soluzione che si troverà in cima alla stack di elaborazione costituirà la soluzione dimostrata da parte della dimostrazione fornita.
+
+La seguente figura descrive, per ciascuna delle 4 regole:
+
+* mostrato in rosso, il prototipo di credenziale su cui essa è applicata
+* il/i possibili stati della stack di elaborazione affinché la regola sia rispettata
+* il nuovo stato della stack di elaborazione dopo l'applicazione della regola (se rispettata)
+
+![](./img/verif_rules.svg)
+
+
+
+
 
 
 
